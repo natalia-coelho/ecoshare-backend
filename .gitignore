@@ -1,0 +1,13 @@
+.vs/ecoshare-backend/FileContentIndex/1f592d6e-579f-41f4-96e0-501403dee48a.vsidx
+.vs/ecoshare-backend/FileContentIndex/603ebb56-0630-4dbc-b705-3ee6616b4a1a.vsidx
+.vs/ecoshare-backend/FileContentIndex/3592ba24-91f6-417b-bfa5-e834c49a8102.vsidx
+.vs/ecoshare-backend/FileContentIndex/d7baf92a-a1d0-47c2-b4c0-fd0c5b13d388.vsidx
+.vs/ecoshare-backend/FileContentIndex/fd07d4c6-dab4-4789-b96c-53e148ecd4f5.vsidx
+bin/Debug/net7.0
+obj/
+.vs/
+.vscode/
+Properties/
+ecoshare-backend.sln
+appsettings.Development.json
+appsettings.json
