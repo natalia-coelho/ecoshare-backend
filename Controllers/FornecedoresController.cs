@@ -1,4 +1,6 @@
 ﻿using ecoshare_backend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ namespace ecoshare_backend.Controllers
 {
     [Route("ecoshare/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FornecedoresController : ControllerBase
     {
         private readonly AppDbContext _context;

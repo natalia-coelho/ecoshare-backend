@@ -1,7 +1,8 @@
 using ecoshare_backend.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext
 {
     public DbSet<Pessoa> Pessoas { get; set; }
     public DbSet<Endereco> Enderecos { get; set; }
