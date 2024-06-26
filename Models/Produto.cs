@@ -12,7 +12,7 @@ public class Produto
     public string? ImagemProduto { get; set; }
     public Categoria? Categoria { get; set; }
     public Fornecedor? Fornecedor { get; set; }
-    public int FornecedorId { get; set; }
+    public int? FornecedorId { get; set; }
 }
 
 public enum Categoria
