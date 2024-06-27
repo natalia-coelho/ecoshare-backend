@@ -58,16 +58,12 @@ namespace ecoshare_backend.Controllers
 
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
-            {
                 return NotFound();
-            }
 
             patchDocument.ApplyTo(usuario, ModelState);
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _context.SaveChangesAsync();
 
@@ -78,9 +74,7 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
             if (id != usuario.UsuarioId)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(usuario).State = EntityState.Modified;
 
@@ -91,13 +85,9 @@ namespace ecoshare_backend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!UsuarioExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -109,9 +99,7 @@ namespace ecoshare_backend.Controllers
         {
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
-            {
                 return NotFound();
-            }
 
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();

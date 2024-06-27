@@ -50,22 +50,16 @@ public class ProdutosController : ControllerBase
     public async Task<IActionResult> PatchProduto(int id, [FromBody] Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Produto> patchDocument)
     {
         if (patchDocument == null)
-        {
             return BadRequest();
-        }
 
         var produto = await _context.Produtos.FindAsync(id);
         if (produto == null)
-        {
             return NotFound();
-        }
 
         patchDocument.ApplyTo(produto, ModelState);
 
         if (!ModelState.IsValid)
-        {
             return BadRequest(ModelState);
-        }
 
         await _context.SaveChangesAsync();
 
@@ -76,9 +70,7 @@ public class ProdutosController : ControllerBase
     public async Task<IActionResult> PutProduto(int id, Produto produto)
     {
         if (id != produto.ProdutoId)
-        {
             return BadRequest();
-        }
 
         _context.Entry(produto).State = EntityState.Modified;
 
@@ -89,13 +81,9 @@ public class ProdutosController : ControllerBase
         catch (DbUpdateConcurrencyException)
         {
             if (!ProdutoExists(id))
-            {
                 return NotFound();
-            }
             else
-            {
                 throw;
-            }
         }
 
         return NoContent();
@@ -107,9 +95,7 @@ public class ProdutosController : ControllerBase
     {
         var produto = await _context.Produtos.FindAsync(id);
         if (produto == null)
-        {
             return NotFound();
-        }
 
         _context.Produtos.Remove(produto);
         await _context.SaveChangesAsync();

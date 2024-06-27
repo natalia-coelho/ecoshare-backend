@@ -32,9 +32,7 @@ namespace ecoshare_backend.Controllers
             var pessoa = await _context.Pessoas.FindAsync(id);
 
             if (pessoa == null)
-            {
                 return NotFound();
-            }
 
             return pessoa;
         }
@@ -45,9 +43,7 @@ namespace ecoshare_backend.Controllers
         {
             pessoa.Endereco = await _context.Enderecos.FindAsync(pessoa.EnderecoId);
             if (pessoa.Endereco == null)
-            {
                 return BadRequest("Endereço não encontrado.");
-            }
 
             _context.Pessoas.Add(pessoa);
             await _context.SaveChangesAsync();
@@ -60,9 +56,7 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> PutPessoa(int id, Pessoa pessoa)
         {
             if (id != pessoa.PessoaId)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(pessoa).State = EntityState.Modified;
 
@@ -73,13 +67,9 @@ namespace ecoshare_backend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!PessoaExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -91,9 +81,7 @@ namespace ecoshare_backend.Controllers
         {
             var pessoa = await _context.Pessoas.FindAsync(id);
             if (pessoa == null)
-            {
                 return NotFound();
-            }
 
             _context.Pessoas.Remove(pessoa);
             await _context.SaveChangesAsync();

@@ -52,22 +52,16 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> PatchEndereco(int id, [FromBody] Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Endereco> patchDocument)
         {
             if (patchDocument == null)
-            {
                 return BadRequest();
-            }
 
             var endereco = await _context.Enderecos.FindAsync(id);
             if (endereco == null)
-            {
                 return NotFound();
-            }
 
             patchDocument.ApplyTo(endereco, ModelState);
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _context.SaveChangesAsync();
 
@@ -78,9 +72,7 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> PutEndereco(int id, Endereco endereco)
         {
             if (id != endereco.EnderecoId)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(endereco).State = EntityState.Modified;
 
@@ -91,13 +83,9 @@ namespace ecoshare_backend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!EnderecoExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -109,9 +97,7 @@ namespace ecoshare_backend.Controllers
         {
             var endereco = await _context.Enderecos.FindAsync(id);
             if (endereco == null)
-            {
                 return NotFound();
-            }
 
             _context.Enderecos.Remove(endereco);
             await _context.SaveChangesAsync();

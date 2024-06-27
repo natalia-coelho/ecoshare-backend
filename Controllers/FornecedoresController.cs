@@ -55,22 +55,16 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> PatchFornecedor(int id, [FromBody] Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Fornecedor> patchDocument)
         {
             if (patchDocument == null)
-            {
                 return BadRequest();
-            }
 
             var fornecedor = await _context.Fornecedores.FindAsync(id);
             if (fornecedor == null)
-            {
                 return NotFound();
-            }
 
             patchDocument.ApplyTo(fornecedor, ModelState);
 
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             await _context.SaveChangesAsync();
 
@@ -81,9 +75,7 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> PutFornecedor(int id, Fornecedor fornecedor)
         {
             if (id != fornecedor.FornecedorId)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(fornecedor).State = EntityState.Modified;
 
@@ -94,13 +86,9 @@ namespace ecoshare_backend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!FornecedorExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
             }
 
             return NoContent();
@@ -112,9 +100,7 @@ namespace ecoshare_backend.Controllers
         {
             var fornecedor = await _context.Fornecedores.FindAsync(id);
             if (fornecedor == null)
-            {
                 return NotFound();
-            }
 
             _context.Fornecedores.Remove(fornecedor);
             await _context.SaveChangesAsync();
