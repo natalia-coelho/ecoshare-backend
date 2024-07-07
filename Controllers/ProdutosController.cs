@@ -35,6 +35,20 @@ public class ProdutosController : ControllerBase
         return produto;
     }
 
+    // GET: ecoshare/Produtos/Fornecedor/5
+    [HttpGet("Fornecedor/{fornecedorId}")]
+    public async Task<ActionResult<IEnumerable<Produto>>> GetProductsBySupplier(int fornecedorId)
+    {
+        var productsBySupplier = await _context.Produtos.
+                            Where(p => p.FornecedorId == fornecedorId)
+                            .ToListAsync();
+
+        if (productsBySupplier == null || !productsBySupplier.Any())
+            return NotFound();
+
+        return productsBySupplier;
+    }
+
     // POST: ecoshare/Produtos
     [HttpPost]
     public async Task<ActionResult<Produto>> PostProduto(Produto produto)
