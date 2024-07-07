@@ -13,14 +13,14 @@ To run the backend locally, follow these steps:
 ``` bash
 cd sustainable-marketplace-backend
 ```
-    
+
 3. **Install Dependencies:**
 ```bash
 dotnet restore
 ```
 
 4. **Set Up Database:**
-    
+
     - Ensure that SQL Server is installed and running.
     - Update the connection string in `appsettings.json` to point to your SQL Server instance.
     - Run Entity Framework migrations to create or update the database schema:
@@ -29,7 +29,7 @@ dotnet restore
 ``` bash
 dotnet run
 ```
-6. **Access the API:**  
+6. **Access the API:**
     The API will be available at the specified base URL (e.g., `http://localhost:5028/` by default).
 
 ## Additional Information
