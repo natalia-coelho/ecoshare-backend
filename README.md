@@ -1,8 +1,11 @@
 # EcoShare Back-end
+
 ## Description
+
 Welcome to EcoShare! 🌻
 
 This project is a marketplace platform designed to showcase products from sustainable suppliers. The frontend is built using Angular, while the backend utilizes a .NET API with SQL Server as the database. [Check frontend repo here.](https://github.com/natalia-coelho/ecoshare-frontend)
+
 ## Setup Instructions
 
 To run the backend locally, follow these steps:
@@ -15,6 +18,7 @@ cd sustainable-marketplace-backend
 ```
 
 3. **Install Dependencies:**
+
 ```bash
 dotnet restore
 ```
@@ -25,12 +29,16 @@ dotnet restore
     - Update the connection string in `appsettings.json` to point to your SQL Server instance.
     - Run Entity Framework migrations to create or update the database schema:
         `dotnet ef database update`
+
 5. **Run the Application:**
+
 ``` bash
 dotnet run
 ```
+
 6. **Access the API:**
-    The API will be available at the specified base URL (e.g., `http://localhost:5028/` by default).
+
+The API will be available at the specified base URL (e.g., `http://localhost:5028/` by default).
 
 ## Additional Information
 
