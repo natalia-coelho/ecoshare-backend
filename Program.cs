@@ -46,7 +46,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<AppDbContext>();
 
 // TODO: Get this URL from Configuration
-var frontendUrl = "http://localhost:4200";
+// var frontendUrl = "http://localhost:4200";
+var frontendUrl = builder.Configuration.GetSection("Integrations:FrontendUrl").Value;
+
 //add the CORS to recognize the frontend !!!
 builder.Services.AddCors(options => options.AddPolicy("FrontEnd", policy =>
 {
