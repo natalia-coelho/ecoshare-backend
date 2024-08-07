@@ -116,5 +116,13 @@ namespace ecoshare_backend.Controllers
             var jwtToken = jwtTokenHandler.WriteToken(token);
             return jwtToken;
         }
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        public IActionResult ResetPassword([FromBody] string email)
+        {
+            Console.WriteLine(email);
+            return Ok();
+        }
     }
 }
