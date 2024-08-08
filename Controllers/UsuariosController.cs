@@ -138,7 +138,7 @@ namespace ecoshare_backend.Controllers
 
         [HttpPost]
         [Route("ForgotPassword")] //Will be Forgot password
-        public IActionResult ForgotPassword([FromBody] UserPasswordResetDto requestDto)
+        public IActionResult ForgotPassword([FromBody] ForgotPasswordDto requestDto)
         {
             //Verificar se e-mail existe
             Console.WriteLine(requestDto.Email);
