@@ -53,5 +53,10 @@ namespace ecoshare_backend.Services
 
             return token;
         }
+
+        public async Task<Usuario?> FindByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
     }
 }
