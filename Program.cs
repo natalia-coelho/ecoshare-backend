@@ -3,6 +3,7 @@ using ecoshare_backend.Data;
 using ecoshare_backend.Models;
 using ecoshare_backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -98,6 +99,12 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
 
     // Add controllers and JSON configuration
     services.AddControllers().AddNewtonsoftJson();
+
+    // Suport file upload
+    services.Configure<FormOptions>(o =>
+    {
+        o.MultipartBodyLengthLimit = 52428800; // Limite de 50 MB
+    });
 
     // Configure Swagger/OpenAPI
     services.AddEndpointsApiExplorer();
