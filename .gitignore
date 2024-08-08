@@ -7,7 +7,6 @@ bin/Debug/net7.0
 obj/
 .vs/
 .vscode/
-Properties/
 ecoshare-backend.sln
 appsettings.Development.json
 appsettings.Production.json
