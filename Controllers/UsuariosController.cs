@@ -121,7 +121,8 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> LoginAsync(UserLoginDTO userDto)
         {
             var token = await _userService.LoginAsync(userDto);
-            return Ok(new LoginRequestResponse(){
+            return Ok(new LoginRequestResponse()
+            {
                 Token = token,
                 Result = true
             });
@@ -136,8 +137,8 @@ namespace ecoshare_backend.Controllers
 
 
         [HttpPost]
-        [Route("ResetPassword")] //Will be Forgot password
-        public IActionResult ResetPassword([FromBody] UserPasswordResetDto requestDto)
+        [Route("ForgotPassword")] //Will be Forgot password
+        public IActionResult ForgotPassword([FromBody] ForgotPasswordDto requestDto)
         {
             //Verificar se e-mail existe
             Console.WriteLine(requestDto.Email);
