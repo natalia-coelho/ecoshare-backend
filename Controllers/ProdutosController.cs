@@ -127,4 +127,26 @@ public class ProdutosController : ControllerBase
     {
         return _context.Produtos.Any(e => e.ProdutoId == id);
     }
+
+    [HttpPost("{id}/upload")]
+    public async Task<IActionResult> UploadImage(int id, IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest("Nenhum arquivo enviado.");
+
+        var produto = await _context.Produtos.FindAsync(id);
+        if (produto == null)
+            return NotFound();
+
+        using (var ms = new MemoryStream())
+        {
+            await file.CopyToAsync(ms);
+            produto.Imagem = ms.ToArray();
+        }
+
+        _context.Produtos.Update(produto);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }
