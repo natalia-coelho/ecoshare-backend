@@ -48,14 +48,14 @@ namespace ecoshare_backend.Controllers
             _context.Pessoas.Add(pessoa);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPessoa), new { id = pessoa.PessoaId }, pessoa);
+            return CreatedAtAction(nameof(GetPessoa), new { id = pessoa.Id }, pessoa);
         }
 
         // PUT: api/Pessoa/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPessoa(int id, Pessoa pessoa)
         {
-            if (id != pessoa.PessoaId)
+            if (id != pessoa.Id)
                 return BadRequest();
 
             _context.Entry(pessoa).State = EntityState.Modified;
@@ -90,7 +90,7 @@ namespace ecoshare_backend.Controllers
         }
         private bool PessoaExists(int id)
         {
-            return _context.Pessoas.Any(e => e.PessoaId == id);
+            return _context.Pessoas.Any(e => e.Id == id);
         }
     }
 }

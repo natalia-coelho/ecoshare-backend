@@ -1,24 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
-namespace ecoshare_backend.Models;
-
-public class Usuario
+namespace ecoshare_backend.Models
 {
-    [Key]
-    public int UsuarioId { get; set; }
-    public string NomeUsuario { get; set; }
-    public Perfil Perfil { get; set; }
-    public string Login { get; set; }
-    public string Password { get; set; }
-    public string CpfCnpj { get; set; }
-    public Pessoa? Pessoa { get; set;}
-    public int PessoaId { get; set; }
-}
+    public class Usuario : IdentityUser
+    {
+        public string CpfCnpj { get; set; } = string.Empty;
+        public DateTime DataNascimento { get; set; }
+        public UserRole Role { get; set; } = UserRole.CLIENT;
 
-public enum Perfil
-{
-    FORNECEDOR,
-    CONSUMIDOR,
-    ADMINISTRADOR
-}
+        // construtor que vai invocar o identity user através do base()
+        public Usuario() : base() 
+        {
 
+        } 
+    }
+}

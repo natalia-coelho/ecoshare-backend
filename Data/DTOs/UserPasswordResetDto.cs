@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ecoshare_backend.Models.DTOs;
+namespace ecoshare_backend.Data.DTOs;
 
 public class UserPasswordResetDto
 {

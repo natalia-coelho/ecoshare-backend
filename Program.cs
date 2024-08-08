@@ -1,4 +1,7 @@
-using ecoshare_backend.Configuration;
+using ecoshare_backend;
+using ecoshare_backend.Data;
+using ecoshare_backend.Models;
+using ecoshare_backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,70 +10,119 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
+// Configure services
+ConfigureServices(builder.Services, builder.Configuration);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+var app = builder.Build();
 
-builder.Services.AddControllers().AddNewtonsoftJson();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Configure middleware
+ConfigureMiddleware(app);
+app.MapControllers();
+app.Run();
 
-builder.Services.AddAuthentication(options =>
+void ConfigureServices(IServiceCollection services, IConfiguration configuration)
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(jwt =>
+    // Configure database contexts
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+    services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+    services.AddDbContext<UserDbContext>(options => options.UseSqlServer(connectionString));
+
+    // Add app services
+    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    services.AddScoped<UsuarioService>();
+    services.AddScoped<TokenService>();
+
+    // Configure Identity services
+    services
+        .AddIdentity<Usuario, IdentityRole>()
+        .AddEntityFrameworkStores<UserDbContext>() // Database communication
+        .AddDefaultTokenProviders();               // Authentication configuration
+
+    services.Configure<IdentityOptions>(options =>
     {
-        var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value);
-        jwt.SaveToken = true;
-        jwt.TokenValidationParameters = new TokenValidationParameters()
+        // Password settings
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequiredUniqueChars = 1;
+
+        // Lockout settings
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+
+        // User settings
+        options.User.AllowedUserNameCharacters =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        options.User.RequireUniqueEmail = false;
+    });
+
+
+    // Configure JWT authentication
+
+    services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uSx3FNPdJMC_0vE9vrlQDHMcO45J_gwSr4e4eow4I8o")),
             ValidateAudience = false,
-            RequireExpirationTime = false,
-            ValidateLifetime = false,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Issuer"],
+            ValidateIssuer = false,
+            ClockSkew = TimeSpan.Zero,
         };
     });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-        options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<AppDbContext>();
+    // Configure Authorization policies
+    services.AddAuthorization(options =>
+    {
+        options.AddPolicy("SupplierPolicy", policy => policy.RequireRole(RoleManager.GetRoleName(UserRole.SUPPLIER)));
+        options.AddPolicy("ClientPolicy", policy => policy.RequireRole(RoleManager.GetRoleName(UserRole.CLIENT)));
+    });
 
-// TODO: Get this URL from Configuration
-// var frontendUrl = "http://localhost:4200";
-var frontendUrl = builder.Configuration.GetSection("Integrations:FrontendUrl").Value;
+    // Add CORS policy
+    // TODO: Get this URL from Configuration
+    //     var frontendUrl = "http://localhost:4200";
+    //var frontendUrl = builder.Configuration.GetSection("Integrations:FrontendUrl").Value;
+    var frontendUrl = "http://localhost:4200"; // or use configuration
 
-//add the CORS to recognize the frontend !!!
-builder.Services.AddCors(options => options.AddPolicy("FrontEnd", policy =>
-{
-    policy.WithOrigins(frontendUrl).AllowAnyMethod().AllowAnyHeader();
-}));
-var app = builder.Build();
+    services.AddCors(options => options.AddPolicy("FrontEnd", policy =>
+    {
+        policy.WithOrigins(frontendUrl).AllowAnyMethod().AllowAnyHeader();
+    }));
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors("AllowOrigin");
+    // Add controllers and JSON configuration
+    services.AddControllers().AddNewtonsoftJson();
+
+    // Configure Swagger/OpenAPI
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
 }
 
-app.UseHttpsRedirection();
+void ConfigureMiddleware(WebApplication app)
+{
+    // Configure the HTTP request pipeline
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        app.UseCors("FrontEnd");
+    }
 
-app.UseAuthentication();
-app.UseAuthorization();
+    app.UseHttpsRedirection();
 
-// call cors here
-app.UseCors("FrontEnd");
-app.MapControllers();
+    // Enable authentication and authorization middleware
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-app.Run();
+    // Enable CORS for frontend
+    app.UseCors("FrontEnd");
+
+    // Map controllers
+    app.MapControllers();
+}

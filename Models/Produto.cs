@@ -11,7 +11,7 @@ public class Produto
     public string? Descricao { get; set; }
     public string? ImagemProduto { get; set; }
     public Categoria? Categoria { get; set; }
-    public Fornecedor? Fornecedor { get; set; }
+    public Fornecedor Fornecedor { get; set; }
     public int? FornecedorId { get; set; }
 }
 

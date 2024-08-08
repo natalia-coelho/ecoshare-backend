@@ -8,7 +8,6 @@ public class AppDbContext : IdentityDbContext
     public DbSet<Endereco> Enderecos { get; set; }
     public DbSet<Fornecedor> Fornecedores { get; set; }
     public DbSet<Produto> Produtos { get; set; }
-    public DbSet<Usuario> Usuarios { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -17,27 +16,6 @@ public class AppDbContext : IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Pessoa>()
-               .HasKey(p => p.PessoaId);
-
-        modelBuilder.Entity<Pessoa>()
-            .HasOne(p => p.Endereco)
-            .WithMany()
-            .HasForeignKey(p => p.EnderecoId);
-
-        modelBuilder.Entity<Usuario>(entity =>
-        {
-            entity.HasKey(e => e.UsuarioId);
-
-            entity.Property(e => e.NomeUsuario).IsRequired();
-            entity.Property(e => e.Perfil).HasConversion<string>();
-
-            entity.HasOne(u => u.Pessoa)
-                .WithMany()
-                .HasForeignKey(u => u.PessoaId)
-                .IsRequired();
-        });
-
         modelBuilder.Entity<Fornecedor>(entity =>
         {
             entity.HasKey(a => a.FornecedorId);
@@ -46,17 +24,7 @@ public class AppDbContext : IdentityDbContext
                 .WithOne(p => p.Fornecedor)
                 .HasForeignKey(p =>  p.FornecedorId)
                 .IsRequired();
-
-            entity.HasOne(a => a.Usuario)
-                .WithMany()
-                .HasForeignKey(e => e.UsuarioId)
-                .IsRequired();
         });
-
-        //modelBuilder.Entity<Endereco>(entity =>
-        //{
-        //    entity.HasKey(e => e.EnderecoId);
-        //});
 
         modelBuilder.Entity<Produto>(entity =>
         {

@@ -1,4 +1,6 @@
-﻿namespace ecoshare_backend.Models.DTOs
+﻿using ecoshare_backend.Data.DTOs;
+
+namespace ecoshare_backend.Models.DTOs
 {
     public class RegistrationRequestResponse : AuthResult
     {

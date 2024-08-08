@@ -1,5 +1,6 @@
 
 using ecoshare_backend.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,11 @@ public class ProdutosController : ControllerBase
     [HttpGet("")]
     public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
     {
+        //var roles = await _userManager.GetRolesAsync(user);
+        //if (roles.Contains(RoleManager.GetRoleName(UserRole.Supplier)))
+        //{
+        //    // Logic for supplier
+        //}
         return await _context.Produtos.ToListAsync();
     }
 

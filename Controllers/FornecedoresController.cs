@@ -11,7 +11,7 @@ namespace ecoshare_backend.Controllers
 {
     [Route("ecoshare/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FornecedoresController : ControllerBase
     {
         private readonly AppDbContext _context;

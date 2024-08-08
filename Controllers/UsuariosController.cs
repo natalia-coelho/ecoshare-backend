@@ -1,4 +1,7 @@
-﻿using ecoshare_backend.Models;
+﻿using ecoshare_backend.Data;
+using ecoshare_backend.Data.DTOs;
+using ecoshare_backend.Models;
+using ecoshare_backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -11,11 +14,13 @@ namespace ecoshare_backend.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly UserDbContext _context;
+        private readonly UsuarioService _userService;
 
-        public UsuariosController(AppDbContext context)
+        public UsuariosController(UserDbContext context, UsuarioService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         // GET: ecoshare/Usuarios
@@ -44,7 +49,7 @@ namespace ecoshare_backend.Controllers
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.UsuarioId }, usuario);
+            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
         }
 
         // PATCH: ecoshare/Usuarios/5
@@ -71,9 +76,9 @@ namespace ecoshare_backend.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        public async Task<IActionResult> PutUsuario(string id, Usuario usuario)
         {
-            if (id != usuario.UsuarioId)
+            if (id != usuario.Id)
                 return BadRequest();
 
             _context.Entry(usuario).State = EntityState.Modified;
@@ -107,9 +112,50 @@ namespace ecoshare_backend.Controllers
             return NoContent();
         }
 
-        private bool UsuarioExists(int id)
+        private bool UsuarioExists(string id)
         {
-            return _context.Usuarios.Any(e => e.UsuarioId == id);
+            return _context.Usuarios.Any(e => e.Id == id);
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync(UserLoginDTO userDto)
+        {
+            var token = await _userService.LoginAsync(userDto);
+            return Ok(new LoginRequestResponse(){
+                Token = token,
+                Result = true
+            });
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> AddUser(UserRegistrationDTO userDTO)
+        {
+            await _userService.RegisterUser(userDTO);
+            return Ok(userDTO);
+        }
+
+
+        [HttpPost]
+        [Route("ResetPassword")] //Will be Forgot password
+        public IActionResult ResetPassword([FromBody] UserPasswordResetDto requestDto)
+        {
+            //Verificar se e-mail existe
+            Console.WriteLine(requestDto.Email);
+            return Ok();
+
+            // TODO: Rename this endpoint to forgot password and create a new one to actually reset it
+            // 1. Check if email is in database
+            // 2. Generate a password reset token
+            // 3. Generate a password reset link like resetpassword?token=xxx,email=yyy
+            // 4. (do last) send the link via email
+            // 5. Return ok
+        }
+
+        // https://chatgpt.com/share/25a14338-ddf6-4202-aa4f-89c2b78f1fc5
+        // Reset Password
+        // If implemented separately can be reused in a context other than forgetting the password
+        // 1. check if user exists
+        // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
+
     }
 }
