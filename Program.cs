@@ -27,7 +27,6 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     var connectionString = configuration.GetConnectionString("DefaultConnection");
 
     services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-    services.AddDbContext<UserDbContext>(options => options.UseSqlServer(connectionString));
 
     // Add app services
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -37,7 +36,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     // Configure Identity services
     services
         .AddIdentity<Usuario, IdentityRole>()
-        .AddEntityFrameworkStores<UserDbContext>() // Database communication
+        .AddEntityFrameworkStores<AppDbContext>() // Database communication
         .AddDefaultTokenProviders();               // Authentication configuration
 
     services.Configure<IdentityOptions>(options =>

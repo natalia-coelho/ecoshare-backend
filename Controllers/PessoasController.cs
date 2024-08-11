@@ -1,4 +1,5 @@
-﻿using ecoshare_backend.Models;
+﻿using ecoshare_backend.Data;
+using ecoshare_backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -48,14 +49,14 @@ namespace ecoshare_backend.Controllers
             _context.Pessoas.Add(pessoa);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPessoa), new { id = pessoa.Id }, pessoa);
+            return CreatedAtAction(nameof(GetPessoa), new { id = pessoa.PessoaId }, pessoa);
         }
 
         // PUT: api/Pessoa/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPessoa(int id, Pessoa pessoa)
         {
-            if (id != pessoa.Id)
+            if (id != pessoa.PessoaId)
                 return BadRequest();
 
             _context.Entry(pessoa).State = EntityState.Modified;
@@ -90,7 +91,7 @@ namespace ecoshare_backend.Controllers
         }
         private bool PessoaExists(int id)
         {
-            return _context.Pessoas.Any(e => e.Id == id);
+            return _context.Pessoas.Any(e => e.PessoaId == id);
         }
     }
 }

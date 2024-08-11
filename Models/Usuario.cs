@@ -5,7 +5,6 @@ namespace ecoshare_backend.Models
 {
     public class Usuario : IdentityUser
     {
-        public string CpfCnpj { get; set; } = string.Empty;
         public DateTime DataNascimento { get; set; }
         public UserRole Role { get; set; } = UserRole.CLIENT;
 
@@ -13,6 +12,6 @@ namespace ecoshare_backend.Models
         public Usuario() : base() 
         {
 
-        } 
+        }
     }
 }

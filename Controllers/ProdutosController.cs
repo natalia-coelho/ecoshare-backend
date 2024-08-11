@@ -1,4 +1,5 @@
 
+using ecoshare_backend.Data;
 using ecoshare_backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +22,19 @@ public class ProdutosController : ControllerBase
     [HttpGet("")]
     public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
     {
+        try
+        {
+            return await _context.Produtos.ToListAsync();
+        } catch (Exception e)
+        {
+            throw new Exception(e.Message.ToString());
+        }
         //var roles = await _userManager.GetRolesAsync(user);
         //if (roles.Contains(RoleManager.GetRoleName(UserRole.Supplier)))
         //{
         //    // Logic for supplier
         //}
-        return await _context.Produtos.ToListAsync();
+        
     }
 
     // GET: ecoshare/Produtos/5

@@ -1,8 +1,0 @@
-﻿namespace ecoshare_backend.Models
-{
-    public class LoginViewModel
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-}

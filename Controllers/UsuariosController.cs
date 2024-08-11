@@ -14,10 +14,10 @@ namespace ecoshare_backend.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly UserDbContext _context;
+        private readonly AppDbContext _context;
         private readonly UsuarioService _userService;
 
-        public UsuariosController(UserDbContext context, UsuarioService userService)
+        public UsuariosController(AppDbContext context, UsuarioService userService)
         {
             _context = context;
             _userService = userService;

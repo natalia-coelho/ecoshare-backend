@@ -7,7 +7,6 @@ public class Fornecedor
     [Key]
     public int FornecedorId { get; set; }
     public string RazaoSocial { get; set; }
-    public string CpfCnpj { get; set; }
     public string? NomeFantasia { get; set; }
     public string? Descricao { get; set; }
     public string? ImagemUrl { get; set; }

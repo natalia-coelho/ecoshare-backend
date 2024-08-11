@@ -9,11 +9,10 @@ public class Produto
     public string Nome { get; set; }
     public decimal Preco { get; set; }
     public string? Descricao { get; set; }
-    public string? ImagemProduto { get; set; }
-    public byte[] Imagem { get; set; }
+    public byte[]? Imagem { get; set; }
     public Categoria? Categoria { get; set; }
-    public Fornecedor Fornecedor { get; set; }
-    public int? FornecedorId { get; set; }
+    public Fornecedor? Fornecedor { get; set; }
+    public int FornecedorId { get; set; }
 }
 
 public enum Categoria

@@ -1,4 +1,5 @@
-﻿using ecoshare_backend.Models;
+﻿using ecoshare_backend.Data;
+using ecoshare_backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
