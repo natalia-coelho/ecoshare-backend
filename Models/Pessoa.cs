@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ecoshare_backend.Models
 {
@@ -13,12 +14,13 @@ namespace ecoshare_backend.Models
         public byte[]? FotoPerfil { get; set; }
         public string? Bio { get; set; }
         public string? TituloPerfil {  get; set; }
+        public string? Formacao {  get; set; }
         public string? Descricao { get; set; }
         public Endereco? Endereco { get; set; }
-        public int EnderecoId { get; set; }
+        public int? EnderecoId { get; set; }
         public Fornecedor? Fornecedor { get; set; }
-        public int FornecedorId { get; set; }
+        public int? FornecedorId { get; set; }
         public Usuario? Usuario { get; set; }
-        public int UsuarioId { get; set; }
+        public string? UsuarioId { get; set; }
     }
 }
