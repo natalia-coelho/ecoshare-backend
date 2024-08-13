@@ -18,7 +18,6 @@ public class ProdutosController : ControllerBase
         _context = context;
     }
 
-    // GET: ecoshare/Produtos
     [HttpGet("")]
     public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
     {
@@ -29,15 +28,8 @@ public class ProdutosController : ControllerBase
         {
             throw new Exception(e.Message.ToString());
         }
-        //var roles = await _userManager.GetRolesAsync(user);
-        //if (roles.Contains(RoleManager.GetRoleName(UserRole.Supplier)))
-        //{
-        //    // Logic for supplier
-        //}
-        
     }
 
-    // GET: ecoshare/Produtos/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Produto>> GetProduto(int id)
     {
@@ -63,7 +55,6 @@ public class ProdutosController : ControllerBase
         return productsBySupplier;
     }
 
-    // POST: ecoshare/Produtos
     [HttpPost]
     public async Task<ActionResult<Produto>> PostProduto(Produto produto)
     {
@@ -73,7 +64,6 @@ public class ProdutosController : ControllerBase
         return CreatedAtAction(nameof(GetProduto), new { id = produto.ProdutoId }, produto);
     }
 
-    // PATCH: ecoshare/Produtos/5
     [HttpPatch("{id}")]
     public async Task<IActionResult> PatchProduto(int id, [FromBody] Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Produto> patchDocument)
     {
@@ -117,7 +107,6 @@ public class ProdutosController : ControllerBase
         return NoContent();
     }
 
-    // DELETE: ecoshare/Produtos/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduto(int id)
     {
@@ -156,5 +145,24 @@ public class ProdutosController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] string? nome, [FromQuery] string? fornecedor, [FromQuery] string? descricao)
+    {
+        var query = _context.Produtos.AsQueryable();
+
+        if (!string.IsNullOrEmpty(nome))
+            query = query.Where(p => p.Nome.Contains(nome));
+        
+        if (!string.IsNullOrEmpty(fornecedor))
+            query = query.Where(p => p.Fornecedor.NomeFantasia.Contains(fornecedor));
+        
+        if (!string.IsNullOrEmpty(descricao))
+            query = query.Where(p => p.Descricao.Contains(descricao));
+        
+        var result = await query.ToListAsync();
+
+        return Ok(result);
     }
 }
