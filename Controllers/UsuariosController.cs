@@ -149,12 +149,15 @@ namespace ecoshare_backend.Controllers
 
             var token = await _userService.GeneratePasswordResetTokenAsync(user);
 
-            var passwordResetUrl = Url.Action("ResetPassword", "Account",
-                new { token = token, email = userDto.Email }, Request.Scheme);
+            // TODO: Change this into a URL for the frontend.
+            // The call to the reset password endpoint should happen there.
+            var passwordResetUrl = Url.Action("ResetPassword", "Usuarios",
+            new { token, email = user.Email }, Request.Scheme);
 
+            // Change this to an email
             Console.WriteLine(passwordResetUrl);
 
-            return Ok(token);
+            return Ok();
         }
 
         // https://chatgpt.com/share/25a14338-ddf6-4202-aa4f-89c2b78f1fc5
