@@ -138,18 +138,21 @@ namespace ecoshare_backend.Controllers
 
         [HttpPost]
         [Route("ForgotPassword")] //Will be Forgot password
-        public IActionResult ForgotPassword([FromBody] ForgotPasswordDto requestDto)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto requestDto)
         {
-            //Verificar se e-mail existe
-            Console.WriteLine(requestDto.Email);
-            return Ok();
-
-            // TODO: Rename this endpoint to forgot password and create a new one to actually reset it
             // 1. Check if email is in database
+            var user = await _userService.FindByEmailAsync(requestDto.Email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
             // 2. Generate a password reset token
             // 3. Generate a password reset link like resetpassword?token=xxx,email=yyy
             // 4. (do last) send the link via email
             // 5. Return ok
+
+            return Ok();
         }
 
         // https://chatgpt.com/share/25a14338-ddf6-4202-aa4f-89c2b78f1fc5
