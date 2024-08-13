@@ -54,9 +54,19 @@ namespace ecoshare_backend.Services
             return token;
         }
 
-        public async Task<Usuario?> FindByEmailAsync(ForgotPasswordDto userDto)
+        public async Task<Usuario?> FindByEmailAsync(string email)
         {
-            return await _userManager.FindByEmailAsync(userDto.Email);
+            return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(Usuario user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(Usuario user, string newPassword)
+        {
+            return await _userManager.ResetPasswordAsync(user, "1", newPassword);
         }
     }
 }

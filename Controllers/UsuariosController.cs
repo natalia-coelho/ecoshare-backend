@@ -141,7 +141,7 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto userDto)
         {
             // 1. Check if email is in database
-            var user = await _userService.FindByEmailAsync(userDto);
+            var user = await _userService.FindByEmailAsync(userDto.Email);
 
             if (user == null)
             {
@@ -160,14 +160,34 @@ namespace ecoshare_backend.Controllers
 
             // 5. Return ok
 
-            // return Ok(new { message = "Password reset link has been sent to your email." });
+            return Ok(new { message = "Password reset link has been sent to your email." });
         }
 
         // https://chatgpt.com/share/25a14338-ddf6-4202-aa4f-89c2b78f1fc5
         // Reset Password
         // If implemented separately can be reused in a context other than forgetting the password
-        // 1. check if user exists
         // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            // 1. check if user exists
+            var user = await _userService.FindByEmailAsync(resetPasswordDto.Email);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
+            var result = await _userService.ResetPasswordAsync(user, resetPasswordDto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(new { messsage = "Password has been reset successfully." });
+        }
     }
 }
