@@ -1,0 +1,23 @@
+@url = http://localhost:5028/ecoshare/Usuarios
+
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "userName": "Natalia",
+  "normalizedUserName": "natalia",
+  "email": "natalia@ecoshare.com.br",
+  "normalizedEmail": "natalia@ecoshare.com.br",
+  "emailConfirmed": true,
+  "passwordHash": "string",
+  "securityStamp": "string",
+  "concurrencyStamp": "string",
+  "phoneNumber": "string",
+  "phoneNumberConfirmed": true,
+  "twoFactorEnabled": true,
+  "lockoutEnd": "2024-08-13T00:38:48.668Z",
+  "lockoutEnabled": false,
+  "accessFailedCount": 0,
+  "dataNascimento": "2024-08-13T00:38:48.668Z",
+  "role": 0
+}
