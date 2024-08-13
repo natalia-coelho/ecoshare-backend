@@ -1,11 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ecoshare_backend.Data.DTOs;
 
 public class UserPasswordResetDto
 {
-    [Required]
-
-    public string Email { get; set; }
+    public required string Email { get; set; }
 }
 
