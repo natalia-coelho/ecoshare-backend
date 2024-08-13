@@ -149,7 +149,7 @@ namespace ecoshare_backend.Controllers
             }
             // 2. Generate a password reset token
 
-            // var token = await _userService.GeneratePasswordResetTokenAsync(user);
+            var token = await _userService.GeneratePasswordResetTokenAsync(user);
 
             // 3. Generate a password reset link like resetpassword?token=xxx,email=yyy
             // var passwordResetUrl = Url.Action("ResetPassword", "Account",
@@ -160,7 +160,7 @@ namespace ecoshare_backend.Controllers
 
             // 5. Return ok
 
-            return Ok(new { message = "Password reset link has been sent to your email." });
+            return Ok(token);
         }
 
         // https://chatgpt.com/share/25a14338-ddf6-4202-aa4f-89c2b78f1fc5
@@ -169,7 +169,7 @@ namespace ecoshare_backend.Controllers
         // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
         [HttpPost]
         [Route("ResetPassword")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {
             // 1. check if user exists
             var user = await _userService.FindByEmailAsync(resetPasswordDto.Email);
@@ -180,14 +180,17 @@ namespace ecoshare_backend.Controllers
             }
 
             // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
-            var result = await _userService.ResetPasswordAsync(user, resetPasswordDto.NewPassword);
+            var result = await _userService.ResetPasswordAsync(
+                user,
+                resetPasswordDto.Token,
+                resetPasswordDto.NewPassword);
 
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
 
-            return Ok(new { messsage = "Password has been reset successfully." });
+            return Ok(new { message = "Password has been reset successfully." });
         }
     }
 }

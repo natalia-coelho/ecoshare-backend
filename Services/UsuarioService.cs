@@ -64,9 +64,9 @@ namespace ecoshare_backend.Services
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
-        public async Task<IdentityResult> ResetPasswordAsync(Usuario user, string newPassword)
+        public async Task<IdentityResult> ResetPasswordAsync(Usuario user, string token, string newPassword)
         {
-            return await _userManager.ResetPasswordAsync(user, "1", newPassword);
+            return await _userManager.ResetPasswordAsync(user, token, newPassword);
         }
     }
 }
