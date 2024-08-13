@@ -137,41 +137,31 @@ namespace ecoshare_backend.Controllers
 
 
         [HttpPost]
-        [Route("ForgotPassword")] //Will be Forgot password
+        [Route("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto userDto)
         {
-            // 1. Check if email is in database
             var user = await _userService.FindByEmailAsync(userDto.Email);
 
             if (user == null)
             {
                 return NotFound();
             }
-            // 2. Generate a password reset token
 
             var token = await _userService.GeneratePasswordResetTokenAsync(user);
 
-            // 3. Generate a password reset link like resetpassword?token=xxx,email=yyy
-            // var passwordResetUrl = Url.Action("ResetPassword", "Account",
-            //     new { token = token, email = userDto.Email }, Request.Scheme);
+            var passwordResetUrl = Url.Action("ResetPassword", "Account",
+                new { token = token, email = userDto.Email }, Request.Scheme);
 
-            // 4. (do last) send the link via email
-            // Console.WriteLine(passwordResetUrl);
-
-            // 5. Return ok
+            Console.WriteLine(passwordResetUrl);
 
             return Ok(token);
         }
 
         // https://chatgpt.com/share/25a14338-ddf6-4202-aa4f-89c2b78f1fc5
-        // Reset Password
-        // If implemented separately can be reused in a context other than forgetting the password
-        // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
         [HttpPost]
         [Route("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {
-            // 1. check if user exists
             var user = await _userService.FindByEmailAsync(resetPasswordDto.Email);
 
             if (user == null)
@@ -179,7 +169,6 @@ namespace ecoshare_backend.Controllers
                 return NotFound();
             }
 
-            // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
             var result = await _userService.ResetPasswordAsync(
                 user,
                 resetPasswordDto.Token,
