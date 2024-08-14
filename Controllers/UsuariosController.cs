@@ -153,10 +153,10 @@ namespace ecoshare_backend.Controllers
 
             // TODO: Change this into a URL for the frontend.
             // The call to the reset password endpoint should happen there.
-            var passwordResetUrl = Url.Action("ResetPassword", "Usuarios",
-            new { token, email = user.Email }, Request.Scheme);
+            // var passwordResetUrl = Url.Action("ResetPassword", "Usuarios",
+            // new { token, email = user.Email }, Request.Scheme);
+            var passwordResetUrl = $"http://localhost:4200/#/reset-password?token={token}&email={userDto.Email}";
 
-            // Change this to an email
             _emailService.SendForgotPasswordEmail(user.Email, passwordResetUrl);
 
             return Ok();
