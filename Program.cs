@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +34,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     services.AddScoped<UsuarioService>();
     services.AddScoped<TokenService>();
+    services.AddScoped<EmailService>();
 
     // Configure Identity services
     services
@@ -108,6 +111,17 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     // Configure Swagger/OpenAPI
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
+
+    var smtpSettings = configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
+
+    services
+        .AddFluentEmail(smtpSettings.Username)
+        .AddSmtpSender(new SmtpClient(smtpSettings.Host)
+        {
+            Port = smtpSettings.Port,
+            Credentials = new NetworkCredential(smtpSettings.Username, smtpSettings.Password),
+            EnableSsl = smtpSettings.EnableSsl
+        });
 }
 
 void ConfigureMiddleware(WebApplication app)

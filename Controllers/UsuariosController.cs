@@ -16,11 +16,13 @@ namespace ecoshare_backend.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UsuarioService _userService;
+        private readonly EmailService _emailService;
 
-        public UsuariosController(AppDbContext context, UsuarioService userService)
+        public UsuariosController(AppDbContext context, UsuarioService userService, EmailService emailService)
         {
             _context = context;
             _userService = userService;
+            _emailService = emailService;
         }
 
         // GET: ecoshare/Usuarios
@@ -155,6 +157,7 @@ namespace ecoshare_backend.Controllers
             new { token, email = user.Email }, Request.Scheme);
 
             // Change this to an email
+            _emailService.SendEmail();
             Console.WriteLine(passwordResetUrl);
 
             return Ok();
