@@ -157,8 +157,7 @@ namespace ecoshare_backend.Controllers
             new { token, email = user.Email }, Request.Scheme);
 
             // Change this to an email
-            _emailService.SendEmail();
-            Console.WriteLine(passwordResetUrl);
+            _emailService.SendForgotPasswordEmail(user.Email, passwordResetUrl);
 
             return Ok();
         }

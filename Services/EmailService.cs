@@ -10,12 +10,12 @@ public class EmailService
         _fluentEmail = fluentEmail;
     }
 
-    public async void SendEmail()
+    public async void SendForgotPasswordEmail(string subject, string resetPasswordLink)
     {
-        var email = await _fluentEmail
-            .To("bemesko@gmail.com")
-            .Subject("Test Email")
-            .Body("This is a test email")
+        await _fluentEmail
+            .To(subject)
+            .Subject("Ecoshare - Esqueci minha senha")
+            .Body($"Olá! Este email está sendo enviado pois recebemos uma solicitação de alteração de senha. Você pode fazer isso pelo link {resetPasswordLink}")
             .SendAsync();
     }
 }
