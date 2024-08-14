@@ -1,5 +1,6 @@
 
 using ecoshare_backend.Data;
+using ecoshare_backend.Data.DTOs;
 using ecoshare_backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,9 @@ public class ProdutosController : ControllerBase
     {
         try
         {
-            return await _context.Produtos.ToListAsync();
+            return await _context.Produtos
+            .Include(p => p.Fornecedor) 
+            .ToListAsync();
         } catch (Exception e)
         {
             throw new Exception(e.Message.ToString());
@@ -31,14 +34,23 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Produto>> GetProduto(int id)
+    public async Task<ActionResult<ProdutoDto>> GetProduto(int id)
     {
-        var produto = await _context.Produtos.FindAsync(id);
+        var produto = await _context.Produtos.Include(p => p.Fornecedor).FirstOrDefaultAsync(p => p.ProdutoId == id);
 
-        if (produto == null)
-            return NotFound();
+        if (produto == null) return NotFound();
 
-        return produto;
+        var produtoDto = new ProdutoDto
+        {
+            ProdutoId = produto.ProdutoId,
+            Nome = produto.Nome,
+            Preco = produto.Preco,
+            Descricao = produto.Descricao,
+            FornecedorId = produto.FornecedorId,
+            FornecedorNome = produto.Fornecedor?.NomeFantasia
+        };
+
+        return produtoDto;
     }
 
     // GET: ecoshare/Produtos/Fornecedor/5

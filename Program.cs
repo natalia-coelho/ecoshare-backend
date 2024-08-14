@@ -97,7 +97,10 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     }));
 
     // Add controllers and JSON configuration
-    services.AddControllers().AddNewtonsoftJson();
+    services.AddControllers().AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
 
     // Suport file upload
     services.Configure<FormOptions>(o =>
