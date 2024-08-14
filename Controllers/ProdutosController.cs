@@ -166,13 +166,13 @@ public class ProdutosController : ControllerBase
 
         if (!string.IsNullOrEmpty(nome))
             query = query.Where(p => p.Nome.Contains(nome));
-        
+
         if (!string.IsNullOrEmpty(fornecedor))
             query = query.Where(p => p.Fornecedor.NomeFantasia.Contains(fornecedor));
-        
+
         if (!string.IsNullOrEmpty(descricao))
             query = query.Where(p => p.Descricao.Contains(descricao));
-        
+
         var result = await query.ToListAsync();
 
         return Ok(result);

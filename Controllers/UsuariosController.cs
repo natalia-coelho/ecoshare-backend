@@ -16,11 +16,13 @@ namespace ecoshare_backend.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UsuarioService _userService;
+        private readonly EmailService _emailService;
 
-        public UsuariosController(AppDbContext context, UsuarioService userService)
+        public UsuariosController(AppDbContext context, UsuarioService userService, EmailService emailService)
         {
             _context = context;
             _userService = userService;
+            _emailService = emailService;
         }
 
         // GET: ecoshare/Usuarios
@@ -137,26 +139,52 @@ namespace ecoshare_backend.Controllers
 
 
         [HttpPost]
-        [Route("ForgotPassword")] //Will be Forgot password
-        public IActionResult ForgotPassword([FromBody] ForgotPasswordDto requestDto)
+        [Route("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto userDto)
         {
-            //Verificar se e-mail existe
-            Console.WriteLine(requestDto.Email);
-            return Ok();
+            var user = await _userService.FindByEmailAsync(userDto.Email);
 
-            // TODO: Rename this endpoint to forgot password and create a new one to actually reset it
-            // 1. Check if email is in database
-            // 2. Generate a password reset token
-            // 3. Generate a password reset link like resetpassword?token=xxx,email=yyy
-            // 4. (do last) send the link via email
-            // 5. Return ok
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var token = await _userService.GeneratePasswordResetTokenAsync(user);
+
+            // TODO: Change this into a URL for the frontend.
+            // The call to the reset password endpoint should happen there.
+            var passwordResetUrl = Url.Action("ResetPassword", "Usuarios",
+            new { token, email = user.Email }, Request.Scheme);
+
+            // Change this to an email
+            _emailService.SendForgotPasswordEmail(user.Email, passwordResetUrl);
+
+            return Ok();
         }
 
         // https://chatgpt.com/share/25a14338-ddf6-4202-aa4f-89c2b78f1fc5
-        // Reset Password
-        // If implemented separately can be reused in a context other than forgetting the password
-        // 1. check if user exists
-        // 2. forward email and token to a function in the user manager that actually resets the password if the token is valid
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _userService.FindByEmailAsync(resetPasswordDto.Email);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userService.ResetPasswordAsync(
+                user,
+                resetPasswordDto.Token,
+                resetPasswordDto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(new { message = "Password has been reset successfully." });
+        }
     }
 }
