@@ -153,6 +153,7 @@ namespace ecoshare_backend.Controllers
             var token = await _userService.GeneratePasswordResetTokenAsync(user);
             token = Uri.EscapeDataString(token);
 
+            // TODO: Get this from Configuration
             var passwordResetUrl = $"http://localhost:4200/#/reset-password?token={token}&email={userDto.Email}";
 
             var response = _emailService.SendForgotPasswordEmail(user.Email, passwordResetUrl);
