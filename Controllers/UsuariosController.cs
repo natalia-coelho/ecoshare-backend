@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace ecoshare_backend.Controllers
@@ -150,14 +151,15 @@ namespace ecoshare_backend.Controllers
             }
 
             var token = await _userService.GeneratePasswordResetTokenAsync(user);
+            token = Uri.EscapeDataString(token);
 
-            // TODO: Change this into a URL for the frontend.
-            // The call to the reset password endpoint should happen there.
-            // var passwordResetUrl = Url.Action("ResetPassword", "Usuarios",
-            // new { token, email = user.Email }, Request.Scheme);
             var passwordResetUrl = $"http://localhost:4200/#/reset-password?token={token}&email={userDto.Email}";
 
-            _emailService.SendForgotPasswordEmail(user.Email, passwordResetUrl);
+            var response = _emailService.SendForgotPasswordEmail(user.Email, passwordResetUrl);
+            if (!response.Result.Successful)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
 
             return Ok();
         }
