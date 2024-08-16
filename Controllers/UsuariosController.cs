@@ -135,6 +135,7 @@ namespace ecoshare_backend.Controllers
         public async Task<IActionResult> AddUser(UserRegistrationDTO userDTO)
         {
             await _userService.RegisterUser(userDTO);
+            
             return Ok(userDTO);
         }
 

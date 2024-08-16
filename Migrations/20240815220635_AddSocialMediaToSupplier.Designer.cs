@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ecoshare_backend.Data;
 
@@ -11,9 +12,10 @@ using ecoshare_backend.Data;
 namespace ecoshare_backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240815220635_AddSocialMediaToSupplier")]
+    partial class AddSocialMediaToSupplier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,15 +161,14 @@ namespace ecoshare_backend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CpfCnpj")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DataNascimento")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailContato")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("EnderecoId")
@@ -182,7 +183,16 @@ namespace ecoshare_backend.Migrations
                     b.Property<byte[]>("FotoPerfil")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("TelefoneContato")
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sobrenome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TituloPerfil")
@@ -248,6 +258,9 @@ namespace ecoshare_backend.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DataNascimento")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -260,10 +273,6 @@ namespace ecoshare_backend.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -286,10 +295,6 @@ namespace ecoshare_backend.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Sobrenome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")

@@ -47,15 +47,14 @@ namespace ecoshare_backend.Controllers
             if (pessoa == null) return NotFound("Perfil não encontrado.");
 
             pessoa.UsuarioId = usuario.Id;
-            pessoa.Nome = pessoaAtualizada.Nome;
-            pessoa.Sobrenome = pessoaAtualizada.Sobrenome;
             pessoa.EmailContato = pessoaAtualizada.EmailContato;
             pessoa.Bio = pessoaAtualizada.Bio;
             pessoa.TituloPerfil = pessoaAtualizada.TituloPerfil;
             pessoa.Descricao = pessoaAtualizada.Descricao;
             pessoa.FotoPerfil = pessoaAtualizada.FotoPerfil;
+            pessoa.DataNascimento = pessoaAtualizada.DataNascimento;
 
-            if (pessoaAtualizada.EnderecoId != 0)
+            if (pessoaAtualizada.EnderecoId != null)
             {
                 var novoEndereco = await _context.Enderecos.FindAsync(pessoaAtualizada.EnderecoId);
                 if (novoEndereco == null) return BadRequest("Novo endereço não encontrado.");

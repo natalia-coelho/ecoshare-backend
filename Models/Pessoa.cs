@@ -7,10 +7,10 @@ namespace ecoshare_backend.Models
     {
         [Key]
         public int PessoaId { get; set; }
-        public string CpfCnpj { get; set; }
-        public string Nome { get; set; }
-        public string Sobrenome { get; set; }
-        public string EmailContato { get; set; }
+        public string? CpfCnpj { get; set; }
+        public DateTime DataNascimento { get; set; }
+        public string? EmailContato { get; set; }
+        public string? TelefoneContato { get; set; }
         public byte[]? FotoPerfil { get; set; }
         public string? Bio { get; set; }
         public string? TituloPerfil {  get; set; }

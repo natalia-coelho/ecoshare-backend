@@ -8,15 +8,21 @@ namespace ecoshare_backend.Data.DTOs
         public UserRegistrationDTO() { }
 
         [Required]
+        public string Nome { get; set; } = string.Empty; 
+
+        [Required]
+        public string Sobrenome { get; set; } = string.Empty; 
+        
+        [Required]
+        [DataType(DataType.PhoneNumber)]
+        public string Telefone { get; set; } = string.Empty;
+
+        [Required]
         public string Username { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = string.Empty;
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime BirthDate { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -27,6 +33,7 @@ namespace ecoshare_backend.Data.DTOs
         public string PasswordConfirmation { get; set; } = string.Empty;
 
         [Required]
-        public UserRole Roles { get; set; }
+        public int Role { get; set; }
+        public UserRole? RoleObject { get; set; }
     }
 }

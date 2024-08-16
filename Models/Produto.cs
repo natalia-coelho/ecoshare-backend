@@ -1,6 +1,4 @@
-// Models/Produto.cs
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ecoshare_backend.Models;
 public class Produto

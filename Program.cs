@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Net.Mail;
@@ -20,6 +21,10 @@ var app = builder.Build();
 
 // Configure middleware
 ConfigureMiddleware(app);
+
+// Seed roles
+await SeedRolesAsync(app.Services);
+
 app.MapControllers();
 app.Run();
 
@@ -35,6 +40,7 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.AddScoped<UsuarioService>();
     services.AddScoped<TokenService>();
     services.AddScoped<EmailService>();
+    services.AddScoped<PerfilService>();
 
     // Configure Identity services
     services
@@ -45,11 +51,11 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     services.Configure<IdentityOptions>(options =>
     {
         // Password settings
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
         options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = true;
-        options.Password.RequiredLength = 6;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 3;
         options.Password.RequiredUniqueChars = 1;
 
         // Lockout settings
@@ -81,11 +87,10 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         };
     });
 
+
     // Configure Authorization policies
     services.AddAuthorization(options =>
     {
-        options.AddPolicy("SupplierPolicy", policy => policy.RequireRole(RoleManager.GetRoleName(UserRole.SUPPLIER)));
-        options.AddPolicy("ClientPolicy", policy => policy.RequireRole(RoleManager.GetRoleName(UserRole.CLIENT)));
     });
 
     // Add CORS policy
@@ -148,4 +153,21 @@ void ConfigureMiddleware(WebApplication app)
 
     // Map controllers
     app.MapControllers();
+}
+
+async Task SeedRolesAsync(IServiceProvider serviceProvider)
+{
+    using var scope = serviceProvider.CreateScope();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    // Define roles to add
+    var roles = Enum.GetNames(typeof(UserRole));
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
 }

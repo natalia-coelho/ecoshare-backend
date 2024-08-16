@@ -2,6 +2,7 @@
 using ecoshare_backend.Data;
 using ecoshare_backend.Data.DTOs;
 using ecoshare_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,8 @@ public class ProdutosController : ControllerBase
             Preco = produto.Preco,
             Descricao = produto.Descricao,
             FornecedorId = produto.FornecedorId,
-            FornecedorNome = produto.Fornecedor?.NomeFantasia
+            Imagem = produto.Imagem,
+            FornecedorNome = produto.Fornecedor?.NomeFantasia,
         };
 
         return produtoDto;

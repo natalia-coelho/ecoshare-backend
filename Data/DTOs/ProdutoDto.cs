@@ -6,6 +6,7 @@
         public string Nome { get; set; }
         public decimal Preco { get; set; }
         public string? Descricao { get; set; }
+        public byte[]? Imagem { get; set; }
         public int? FornecedorId { get; set; }
         public string? FornecedorNome { get; set; }
     }

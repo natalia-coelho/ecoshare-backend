@@ -12,7 +12,7 @@ namespace ecoshare_backend.Controllers
 {
     [Route("ecoshare/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class FornecedoresController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -112,6 +112,22 @@ namespace ecoshare_backend.Controllers
         private bool FornecedorExists(int id)
         {
             return _context.Fornecedores.Any(e => e.FornecedorId == id);
+        }
+
+        [HttpGet("supplier/{supplierId}")]
+        public async Task<IActionResult> GetSupplierOrders(int supplierId)
+        {
+            var pedidos = await _context.Orders
+                .Where(o => o.Product.FornecedorId == supplierId)
+                .Select(o => new
+                {
+                    o.Product.Nome,
+                    o.Quantidade,
+                    o.DataPedido
+                })
+                .ToListAsync();
+
+            return Ok(pedidos);
         }
     }
 }
