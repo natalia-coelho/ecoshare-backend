@@ -13,13 +13,15 @@ namespace ecoshare_backend.Services
         private IMapper _mapper;
         private UserManager<Usuario> _userManager;
         private TokenService _tokenService;
+        private PerfilService _perfilService;
 
-        public UsuarioService(SignInManager<Usuario> signInManager, IMapper mapper, UserManager<Usuario> userManager, TokenService tokenService)
+        public UsuarioService(SignInManager<Usuario> signInManager, IMapper mapper, UserManager<Usuario> userManager, TokenService tokenService, PerfilService perfilService)
         {
             _signInManager = signInManager;
             _mapper = mapper;
             _userManager = userManager;
             _tokenService = tokenService;
+            _perfilService = perfilService;
         }
 
         public async Task RegisterUser(UserRegistrationDTO userDTO)
@@ -29,6 +31,32 @@ namespace ecoshare_backend.Services
                 Usuario user = _mapper.Map<Usuario>(userDTO);
                 //create user at the database
                 IdentityResult result = await _userManager.CreateAsync(user, userDTO.Password);
+
+                if (result.Succeeded)
+                {
+                    switch (userDTO.Role) 
+                    {
+                        case 0:
+                            userDTO.RoleObject = UserRole.ADMIN;
+                            break;
+                        case 1:
+                            userDTO.RoleObject = UserRole.CLIENTE;
+                            break;
+
+                        case 2:
+                            userDTO.RoleObject = UserRole.FORNECEDOR;
+                            break;
+
+                        case 3:
+                            userDTO.RoleObject = UserRole.DEVELOPER;
+                            break;
+                    }
+
+                    await _userManager.AddToRoleAsync(user, userDTO.RoleObject.Value.ToString());
+                    await _perfilService.CriarPerfil(user); // TODO: Testar esse método
+                }
+                else
+                    throw new Exception(result.Errors.FirstOrDefault().ToString());
             }
             catch (Exception ex)
             {

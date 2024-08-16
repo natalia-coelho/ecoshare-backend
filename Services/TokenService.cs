@@ -22,8 +22,9 @@ public class TokenService
             new Claim("username", user.UserName),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim("email", user.Email.ToString()),
-            new Claim(ClaimTypes.DateOfBirth, user.DataNascimento.ToString("yyyy-MM-dd")),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
+            new Claim(ClaimTypes.Name, user.Nome + ' ' + user.Sobrenome),
+            new Claim(ClaimTypes.MobilePhone, user.PhoneNumber)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("uSx3FNPdJMC_0vE9vrlQDHMcO45J_gwSr4e4eow4I8o"));
